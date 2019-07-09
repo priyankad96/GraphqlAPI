@@ -1,0 +1,45 @@
+///all data
+ query course{
+             allCourses
+             {
+               title
+               author
+               topic
+                url
+             }
+            }
+
+---------------
+//data by id
+
+ query course($Id:ID!){
+course(id:$Id)
+  {
+    title
+    author
+    topic
+    url
+  }
+}
+
+{
+ "Id":1
+}
+
+------------------
+//data by Topic
+
+ query course($Topic:String){
+courses(topic:$Topic)
+  {
+    title
+    author
+    topic
+    url
+  }
+}
+
+///optional
+{
+ "Topic": "React Native"
+}

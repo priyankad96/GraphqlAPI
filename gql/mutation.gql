@@ -1,0 +1,42 @@
+//insertData
+mutation updateCourse($Title:String!,$Author:String!,$Description:String!,$Topic:String!,$Url:String!){
+  updateCourse(title:$Title,author:$Author, description: $Description, topic: $Topic, url:$Url)
+  {
+    id
+    title
+    author
+    description
+    topic
+    url
+  }
+}
+
+data:
+{
+  "Title": "The complete Rect native Developer Course",
+  "Author": "Andrew Med",
+   "Description": "Learn React Native by building real world application",
+  "Topic": "Test",
+  "Url": "Test"
+}
+-------------------
+//updateTopic
+mutation updateCourse($Id:ID!,$Topic:String!){
+    updateTopicById(id:$Id,topic:$Topic)
+    {
+      id
+      title
+      author
+      description
+      topic
+      url
+    }
+  }
+
+data:
+{
+  "Id":1,
+  "Topic": "React Native"
+}
+
+--------------------

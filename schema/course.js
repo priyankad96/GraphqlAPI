@@ -34,7 +34,7 @@ Course.sync({ force: false }).then((res) => {
     console.log('Course Table Create Succesfully');
 }).catch((err) => {
     console.log('Error in creating Table', err);
-})
+});
 
 module.exports = Course;
 

@@ -30,14 +30,14 @@ var coursesData=require('./schema/course');
 //-------------Schema with Apollo Server------
 var schema = gql `
    type Query {
-        course(id:ID!):Course
+        course(id:Int!):[Course]
         courses(topic:String):[Course]
         allCourses:[Course]
    }
    type Mutation{
-        updateTopicById(id:ID!,topic:String!):Course
-       updateCourse(id:ID,title:String!,author:String!,description:String!,topic:String!,url:String!):Course
-       insertCourse(id:ID,title:String!,author:String!,description:String!,topic:String!,url:String!):Course
+        updateTopicById(id:ID!,topic:String!):[Course]
+       updateCourse(id:ID,title:String!,author:String!,description:String!,topic:String!,url:String!):[Course]
+       insertCourse(id:ID,title:String!,author:String!,description:String!,topic:String!,url:String!):[Course]
        
    }
    type Course{
@@ -50,28 +50,15 @@ var schema = gql `
    }`;
 
 
-var getCourse = function (parent, args)  {
-    console.log("gjji",args);
-    var id = Number(args.id);
-   var a= coursesData.findAll({
-       where: {
-           id: id
-       }
-   });
-   console.log(a);
-   return 1;
+var getCourse = function (parent,args)  {
+   return coursesData.findAll({where:{id:args.id}});
 };
 
 var getCourses = function (parent, args) {
-    if (args.topic) {
-        var topic = args.topic;
-        return coursesData.filter(course =>{
-                console.log(course);
-            return  course.topic === topic
-        }
-        )
-    } else {
-        return coursesData;
+    if(args.topic){
+        return coursesData.findAll({where:{topic:args.topic}})
+    }else{
+        return coursesData.findAll();
     }
 };
 
@@ -80,19 +67,8 @@ var allCourses=()=>{
 };
 
 var updateTopicById=(parent,args)=>{
-    console.log('dfd',args);
-    let id=args.id;
-    let topic=args.topic;
-    coursesData.map(course=>{
-        if(course.id==id){
-            course.topic=topic
-        }
-    });
-   return coursesData.filter(course=>{
-        if(course.id==id){
-            return course
-        }
-    })[0];
+    coursesData.update({topic:args.topic},{where:{id:args.id}});
+    return coursesData.findAll({where:{id:args.id}})
 };
 
 var updateCourse=(parent,args)=>{
@@ -113,7 +89,17 @@ var insertCourse=(parent,args)=>{
     console.log(args);
     coursesData.push(args);
     let l=coursesData.length;
-    return coursesData[l-1];
+    const id=l;
+    const title=args.title;
+    const author=args.author;
+    const description=args.description;
+    const topic=args.topic;
+    const url=args.url;
+    let data=new coursesData();
+    data={id:l,title,author,description,topic,url};
+    console.log("sdsd---",data);
+    data.save();
+    return coursesData.findAll({where:{id:l}});
 };
 
 var coursesData1 = [
